@@ -8,11 +8,11 @@ use Tests\AbstractUnitTestCase;
 
 class CalculatorTest extends AbstractUnitTestCase
 {
-    const DATA_DIRECTORY = "/../../data/";
+    const DATA_DIRECTORY = DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."data".DIRECTORY_SEPARATOR;
     
     protected $calculator;
-    
-    protected function setUp()
+
+    protected function setUp(): void
     {
         $this->calculator = new Calculator(__DIR__ . self::DATA_DIRECTORY);
     }

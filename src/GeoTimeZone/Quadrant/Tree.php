@@ -45,7 +45,7 @@ class Tree extends Element
      */
     protected function loadFeatures($quadrantPath)
     {
-        $filePath = $this->dataDirectory . implode('/', str_split($quadrantPath)) . DIRECTORY_SEPARATOR .
+        $filePath = $this->dataDirectory . implode(DIRECTORY_SEPARATOR, str_split($quadrantPath)) . DIRECTORY_SEPARATOR .
             self::GEO_FEATURE_FILENAME;
         $geoJson = json_decode(file_get_contents($filePath), true);
         return $geoJson;
@@ -83,6 +83,8 @@ class Tree extends Element
             $validTimezone = $this->evaluateFeatures($quadrantPath, $latitude, $longitude);
         } elseif (is_numeric($zoneData)) {
             $validTimezone = $this->dataTree['timezones'][$zoneData];
+        } elseif (isset($zoneData[0]) && is_numeric($zoneData[0])) {
+            $validTimezone = $this->dataTree['timezones'][$zoneData[0]];
         }
         return $validTimezone;
     }
@@ -110,7 +112,7 @@ class Tree extends Element
         $timeZone = self::NONE_TIMEZONE;
         $quadrantPath = '';
         $quadrantTree = $this->dataTree['lookup'];
-        
+
         while (!$this->isValidTimeZone($timeZone)) {
             $geoQuadrant->moveToNextQuadrant($latitude, $longitude);
             if (!isset($quadrantTree[$geoQuadrant->getLevel()])) {
@@ -121,7 +123,7 @@ class Tree extends Element
             $timeZone = $this->evaluateQuadrantData($quadrantTree, $quadrantPath, $latitude, $longitude);
             $geoQuadrant->updateMidCoordinates();
         }
-        
+
         if ($timeZone == self::NONE_TIMEZONE || $timeZone == Utils::NOT_FOUND_IN_FEATURES) {
             throw new ErrorException("ERROR: TimeZone not found");
         }

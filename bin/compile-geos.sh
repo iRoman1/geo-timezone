@@ -1,13 +1,13 @@
 #!/bin/bash
 
-apt-get install php7.0-dev &&\
-apt-get install php7.0-zip &&\
-apt-get install php7.0-xml &&\
-apt-get install php7.0-mbstring &&\
+apt install php8.1-dev &&\
+apt install php8.1-zip &&\
+apt install php8.1-xml &&\
+apt install php8.1-mbstring &&\
 
-curl -s -O http://download.osgeo.org/geos/geos-3.6.1.tar.bz2 &&\
-  tar -xjvf geos-3.6.1.tar.bz2 &&\
-  cd geos-3.6.1/ &&\
+curl -s -O http://download.osgeo.org/geos/geos-3.9.3.tar.bz2 &&\
+  tar -xjvf geos-3.9.3.tar.bz2 &&\
+  cd geos-3.9.3/ &&\
   ./configure --enable-php &&\
   make &&\
   make install &&\
@@ -16,7 +16,7 @@ curl -s -O http://download.osgeo.org/geos/geos-3.6.1.tar.bz2 &&\
 ldconfig
 
 
-git clone https://git.osgeo.org/gogs/geos/php-geos.git  &&\
+git clone https://github.com/macellan/php-geos  &&\
   cd php-geos  &&\
   ./autogen.sh  &&\
   ./configure  &&\

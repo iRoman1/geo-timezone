@@ -11,7 +11,7 @@ class UpdaterDataTest
     public function main()
     {
         try {
-            $updater = new UpdaterData("/media/ana/Datos/geo-timezone/data/");
+            $updater = new UpdaterData(__DIR__ . DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."data".DIRECTORY_SEPARATOR);
             $updater->updateData();
         } catch (\ErrorException $error) {
             echo $error->getMessage();

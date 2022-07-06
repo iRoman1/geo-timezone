@@ -89,7 +89,7 @@ class Indexer extends Tree
             if ($this->utils->intersectsPolygons($zoneJson, $quadrantBounds)) {
                 if ($this->utils->withinPolygon($quadrantBounds, $zoneJson)) {
                     echo "Found match!\n";
-                    $intersectedZones = $zoneIdx;
+                    $intersectedZones = [$zoneIdx];
                     $foundExactMatch = true;
                     break;
                 } else {
