@@ -123,6 +123,8 @@ class Utils
      */
     protected function structureOneFeature($feature)
     {
+        if(!isset($feature['coordinates']))
+            $feature['coordinates'] = [];
         $structuredFeature = array(
             "type" => self::FEATURE_GEOJSON_NAME,
             "geometry" => array(
@@ -259,6 +261,8 @@ class Utils
         $point = $this->createPoint($latitude, $longitude);
         if ($point != null) {
             foreach ($features['features'] as $feature) {
+                if(!isset($feature['geometry']['coordinates']))
+                    $feature['geometry']['coordinates'] = [];
                 foreach ($feature['geometry']['coordinates'] as $polygonFeatures) {
                     $polygon = $this->createPolygonFromJson(
                         json_encode($this->createPolygonJsonFromPoints(
