@@ -16,7 +16,7 @@ class UpdaterData
     const REPO_USER = "node-geo-tz";
     const REPO_PATH = "/repos/evansiroky/timezone-boundary-builder/releases/latest";
     const GEO_JSON_DEFAULT_URL = "none";
-    const GEO_JSON_DEFAULT_NAME = "geojson";
+    const GEO_JSON_DEFAULT_NAME = "timezones-with-oceans.geojson.zip";
     
     protected $mainDir = null;
     protected $downloadDir = null;
