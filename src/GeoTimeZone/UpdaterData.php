@@ -16,10 +16,11 @@ class UpdaterData
     const REPO_USER = "node-geo-tz";
     const REPO_PATH = "/repos/evansiroky/timezone-boundary-builder/releases/latest";
     const GEO_JSON_DEFAULT_URL = "none";
-    const GEO_JSON_DEFAULT_NAME = "timezones-with-oceans.geojson.zip";
+    const GEO_JSON_DEFAULT_NAME = "geojson";
     
     protected $mainDir = null;
     protected $downloadDir = null;
+    protected $downloadFile = null;
     protected $timezonesSourcePath = null;
     
     /**
@@ -27,13 +28,14 @@ class UpdaterData
      * @param $dataDirectory
      * @throws ErrorException
      */
-    public function __construct($dataDirectory = null)
+    public function __construct($dataDirectory = null, $filename = self::GEO_JSON_DEFAULT_NAME)
     {
         if ($dataDirectory == null) {
             throw new ErrorException("ERROR: Invalid data directory.");
         }else{
             $this->mainDir = $dataDirectory;
-            $this->downloadDir = $dataDirectory . "/" . self::DOWNLOAD_DIR;
+            $this->downloadDir = $dataDirectory . DIRECTORY_SEPARATOR . self::DOWNLOAD_DIR;
+            $this->downloadFile = $filename;
         }
     }
     
@@ -69,7 +71,7 @@ class UpdaterData
         $jsonResp = json_decode($data, true);
         $geoJsonUrl = self::GEO_JSON_DEFAULT_URL;
         foreach ($jsonResp['assets'] as $asset) {
-            if (strpos($asset['name'], self::GEO_JSON_DEFAULT_NAME)) {
+            if (strpos($asset['name'], $this->downloadFile) !== false || $asset['name'] == $this->downloadFile) {
                 $geoJsonUrl = $asset['browser_download_url'];
                 break;
             }
@@ -124,7 +126,7 @@ class UpdaterData
      */
     protected function renameTimezoneJson()
     {
-        $path = realpath($this->downloadDir . self::TIMEZONE_FILE_NAME . "/");
+        $path = realpath($this->downloadDir . self::TIMEZONE_FILE_NAME . DIRECTORY_SEPARATOR);
         $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
         $jsonPath = "";
         foreach ($files as $pathFile => $file) {
@@ -133,7 +135,7 @@ class UpdaterData
                 break;
             }
         }
-        $this->timezonesSourcePath = dirname($jsonPath) . "/" . self::TIMEZONE_FILE_NAME . ".json";
+        $this->timezonesSourcePath = dirname($jsonPath) . DIRECTORY_SEPARATOR . self::TIMEZONE_FILE_NAME . ".json";
         echo $this->timezonesSourcePath . "\n";
         return rename($jsonPath, $this->timezonesSourcePath);
     }
@@ -150,7 +152,7 @@ class UpdaterData
         if (is_dir($path)) {
             $objects = scandir($path);
             foreach ($objects as $object) {
-                $objectPath = $path . "/" . $object;
+                $objectPath = $path . DIRECTORY_SEPARATOR . $object;
                 if ($object != "." && $object != "..") {
                     if (is_dir($objectPath)) {
                         if (in_array(basename($object), $validDir) || $removeAll) {
@@ -179,7 +181,7 @@ class UpdaterData
             Indexer::LEVEL_C,
             Indexer::LEVEL_D
         ];
-        $this->removeData($this->mainDir . "/", $validDir);
+        $this->removeData($this->mainDir . DIRECTORY_SEPARATOR, $validDir);
     }
     
     
