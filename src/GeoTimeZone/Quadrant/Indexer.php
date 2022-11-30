@@ -235,7 +235,7 @@ class Indexer extends Tree
             if ($lastLevelFlag) {
                 $features = $this->getIntersectionFeatures($intersectionResult, $curQuadrant);
                 $featuresCollection = $this->utils->getFeatureCollection($features);
-                $featuresPath = $this->dataDirectory . str_replace('.', "/", $curQuadrant['id']) . "/";
+                $featuresPath = $this->dataDirectory . str_replace('.', DIRECTORY_SEPARATOR, $curQuadrant['id']);
                 $this->writeGeoFeaturesToJson($featuresCollection, $featuresPath);
                 $zoneResult = 'f';
             } else {
@@ -319,10 +319,10 @@ class Indexer extends Tree
     protected function createDirectoryTree($path)
     {
         $directories = explode($this->dataDirectory, $path)[1];
-        $directories = explode("/", $directories);
+        $directories = explode(DIRECTORY_SEPARATOR, $directories);
         $currentDir = $this->dataDirectory;
         foreach ($directories as $dir) {
-            $currentDir = $currentDir . "/" . $dir;
+            $currentDir = $currentDir . DIRECTORY_SEPARATOR . $dir;
             if (!is_dir($currentDir)) {
                 mkdir($currentDir);
             }

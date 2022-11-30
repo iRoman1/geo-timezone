@@ -21,6 +21,8 @@ class Tree extends Element
     public function __construct($dataDirectory=null)
     {
         if (isset($dataDirectory) && is_dir($dataDirectory)) {
+            if(mb_substr($dataDirectory, -1, 1) != DIRECTORY_SEPARATOR)
+                $dataDirectory .= DIRECTORY_SEPARATOR;
             Element::__construct();
             $this->dataDirectory = $dataDirectory;
             $this->utils = new Utils();

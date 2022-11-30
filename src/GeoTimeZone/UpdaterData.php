@@ -205,7 +205,7 @@ class UpdaterData
         $handle = opendir($mainDir);
         while (false !== $f = readdir($handle)) {
             if ($f != '.' && $f != '..') {
-                $filePath = "$mainDir/$f";
+                $filePath = $mainDir . DIRECTORY_SEPARATOR . $f;
                 $localPath = substr($filePath, $exclusiveLength);
                 if (is_file($filePath)) {
                     $zip->addFile($filePath, $localPath);
@@ -232,7 +232,7 @@ class UpdaterData
         $z = new ZipArchive();
         $z->open($outZipPath, ZIPARCHIVE::CREATE);
         $z->addEmptyDir($dirName);
-        $this->folderToZip($sourcePath, $z, strlen("$parentPath/"));
+        $this->folderToZip($sourcePath, $z, strlen($parentPath . DIRECTORY_SEPARATOR));
         $z->close();
     }
     
