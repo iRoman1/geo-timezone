@@ -119,11 +119,11 @@ class Calculator
         try {
             $timeZoneName = $this->getTimeZoneName($latitude, $longitude);
             if ($timeZoneName != Tree::NONE_TIMEZONE) {
-                $timezone = ($timeZoneName != null) ? new \DateTimeZone('Europe/Moscow'):null;
-                $default_timezone = date_default_timezone_get();
-                date_default_timezone_set('UTC');
-                $date = new DateTime(date('Y-m-d H:i:s', $localTimestamp), $timezone);
-                date_default_timezone_set($default_timezone);
+                $date = new DateTime();
+                $date->setTimestamp($localTimestamp);
+                if ($timeZoneName != null) {
+                    $date->setTimezone(new DateTimeZone($timeZoneName));
+                }
                 $timestamp = $date->getOffset() != false ? $localTimestamp - $date->getOffset() : $localTimestamp;
             }
         }catch(ErrorException $error){
