@@ -8,6 +8,7 @@
     "ext-dom": "*",
     "ext-mbstring": "^8.1.0",
     "ext-zip": "*",
+    "ext-geos": "*",
     "ext-xml":"^8.1.0",
     "phayes/geophp": "1.2.*"
   },

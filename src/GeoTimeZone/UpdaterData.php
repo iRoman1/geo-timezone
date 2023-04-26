@@ -20,6 +20,7 @@ class UpdaterData
     
     protected $mainDir = null;
     protected $downloadDir = null;
+    protected $previousUpdate = null;
     protected $downloadFile = null;
     protected $timezonesSourcePath = null;
     
@@ -28,7 +29,7 @@ class UpdaterData
      * @param $dataDirectory
      * @throws ErrorException
      */
-    public function __construct($dataDirectory = null, $filename = self::GEO_JSON_DEFAULT_NAME)
+    public function __construct($dataDirectory = null, $filename = self::GEO_JSON_DEFAULT_NAME, $previousUpdate = null)
     {
         if ($dataDirectory == null) {
             throw new ErrorException("ERROR: Invalid data directory.");
@@ -36,6 +37,7 @@ class UpdaterData
             $this->mainDir = $dataDirectory;
             $this->downloadDir = $dataDirectory . DIRECTORY_SEPARATOR . self::DOWNLOAD_DIR;
             $this->downloadFile = $filename;
+            $this->previousUpdate = $previousUpdate;
         }
     }
     
@@ -78,14 +80,43 @@ class UpdaterData
         }
         return $geoJsonUrl;
     }
+
+    /**
+     * Get timezones json url
+     * @param $data
+     * @return array
+     */
+    protected function getGeoJsonUrlAndDate($data)
+    {
+        $jsonResp = json_decode($data, true);
+        $info = [
+            'url' => self::GEO_JSON_DEFAULT_URL,
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        foreach ($jsonResp['assets'] as $asset) {
+            if (strpos($asset['name'], $this->downloadFile) !== false || $asset['name'] == $this->downloadFile) {
+                $info['url'] = $asset['browser_download_url'];
+                $info['created_at'] = $asset['created_at'];
+                break;
+            }
+        }
+        return $info;
+    }
     
+    /**
+     * Get url and created date
+     */
+    protected function getInfo()
+    {
+        $response = $this->getResponse(self::REPO_HOST . self::REPO_PATH);
+        return $this->getGeoJsonUrlAndDate($response);
+    }
+
     /**
      * Download last version reference repo
      */
-    protected function downloadLastVersion()
+    protected function downloadLastVersion($geoJsonUrl)
     {
-        $response = $this->getResponse(self::REPO_HOST . self::REPO_PATH);
-        $geoJsonUrl = $this->getGeoJsonUrl($response);
         if ($geoJsonUrl != self::GEO_JSON_DEFAULT_URL) {
             if (!is_dir($this->mainDir)) {
                 mkdir($this->mainDir);
@@ -241,8 +272,14 @@ class UpdaterData
      */
     public function updateData()
     {
+        echo "Checking updates...\n";
+        $info = $this->getInfo();
+        if(!empty($this->previousUpdate) && strtotime($info['created_at']) <= strtotime($this->previousUpdate)) {
+            echo "Last version already downloaded.\n";
+            return;
+        }
         echo "Downloading data...\n";
-        $this->downloadLastVersion();
+        $this->downloadLastVersion($info['url']);
         echo "Unzip data...\n";
         $this->unzipData($this->downloadDir . self::TIMEZONE_FILE_NAME . ".zip");
         echo "Rename timezones json...\n";
