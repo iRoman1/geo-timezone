@@ -35,7 +35,7 @@ class Calculator
     protected function adjustLatitude($latitude)
     {
         $newLatitude = $latitude;
-        if (null == $latitude || abs($latitude) > Tree::MAX_ABS_LATITUDE) {
+        if (null === $latitude || abs($latitude) > Tree::MAX_ABS_LATITUDE) {
             throw new ErrorException('Invalid latitude: ' . $latitude);
         }
         if (abs($latitude) == Tree::MAX_ABS_LATITUDE) {
@@ -53,7 +53,7 @@ class Calculator
     protected function adjustLongitude($longitude)
     {
         $newLongitude = $longitude;
-        if (null == $longitude || abs($longitude) > Tree::MAX_ABS_LONGITUDE) {
+        if (null === $longitude || abs($longitude) > Tree::MAX_ABS_LONGITUDE) {
             throw new ErrorException('Invalid longitude: ' . $longitude);
         }
         if (abs($longitude) == Tree::MAX_ABS_LONGITUDE) {
