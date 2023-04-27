@@ -276,7 +276,7 @@ class UpdaterData
         $info = $this->getInfo();
         if(!empty($this->previousUpdate) && strtotime($info['created_at']) <= strtotime($this->previousUpdate)) {
             echo "Last version already downloaded.\n";
-            return;
+            return false;
         }
         echo "Downloading data...\n";
         $this->downloadLastVersion($info['url']);
@@ -293,6 +293,7 @@ class UpdaterData
         $this->removeDownloadedData();
         echo "Zipping quadrant tree data...";
         $this->zipDir($this->mainDir, $this->mainDir . ".zip");
+        return true;
     }
 }
 
